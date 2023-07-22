@@ -1,8 +1,12 @@
+
+
+
+
 <?php
-$servername = "localhost:3306";
-$username = "admin";
-$password = "Admin123$$";
-$dbname = "edit_ticket";
+$servername = getenv('MYSQL_SERVER');
+$username = getenv('MYSQL_USER');
+$password = getenv('MYSQL_PASSWORD');
+$dbname = getenv('MYSQL_DBNAME');
 
 // Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);
