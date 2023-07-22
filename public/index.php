@@ -6,6 +6,7 @@
 </head>
 <body>
 
+<?php include("../private/init_dotenv.php")?>
 <?php include("../private/mysql_connection.php")?>
 
 <h1>Edit Ticket</h1>
