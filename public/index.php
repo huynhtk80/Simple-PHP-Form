@@ -15,56 +15,82 @@
     <?php include("../private/init_dotenv.php")?>
     <?php include("../private/mysql_connection.php")?>
 
-    <h1>Edit Ticket</h1>
+    <div class="header">
+        <h1>Edit Ticket</h1>
+    </div>
 
     <div>
-        <h2>Project</h2>
+
+
         <form id="ticketForm">
-            <label for="customerName">Customer Name:</label>
-            <select type="text" name="customerName" id="customerName">
-                <option value=""> choose</option>
-                <?php
-                    // Fetch customer names from the database
-                    $sql = "SELECT staff_name, position name FROM staff"; // Replace 'customer_table' with the actual table name
-                    $result = mysqli_query($conn, $sql);
+            <div class="form-section-container">
+                <h2>Project</h2>
+                <div class="form-column-container">
+                    <div class="form-column">
+                        <div class="form-group-h">
+                            <label for="customerName">Customer Name:</label>
+                            <select type="text" name="customerName" id="customerName">
+                                <option value=""> choose</option>
+                                <?php
+                                    // Fetch customer names from the database
+                                    $sql = "SELECT staff_name, position name FROM staff"; // Replace 'customer_table' with the actual table name
+                                    $result = mysqli_query($conn, $sql);
 
-                    if (mysqli_num_rows($result) > 0) {
-                         while ($row = mysqli_fetch_assoc($result)) {
-                            echo '<option value="' . $row['staff_name'] . '">' . $row['staff_name'] . '</option>';
-                        }
-                    }
-                ?>
-            </select>
+                                    if (mysqli_num_rows($result) > 0) {
+                                        while ($row = mysqli_fetch_assoc($result)) {
+                                            echo '<option value="' . $row['staff_name'] . '">' . $row['staff_name'] . '</option>';
+                                        }
+                                    }
+                                ?>
+                            </select>
+                        </div>
+                        <div class="form-group-h">
+                            <label for="jobName">Job Name:</label>
+                            <select type="text" name="jobName" id="jobName">
+                                <option value=""> choose</option>
+                            </select>
+                        </div>
+                        <div class="form-group-h">
+                            <label for="status">Status:</label>
+                            <select name="status" id="status">
+                                <option value=""> choose</option>
+                                <option value=""> Pending Approval</option>
+                                <option value=""> Active</option>
+                                <option value=""> Completed</option>
+                            </select>
+                        </div>
 
-            <label for="jobName">Job Name:</label>
-            <select type="text" name="jobName" id="jobName">
-                <option value=""> choose</option>
-            </select>
+                        <div class="form-group-h">
+                            <label for="location">Location/LSD:</label>
+                            <select name="location" id="location">
+                                <option value=""> Select LSD...</option>
+                                <option value=""> Pending Approval</option>
+                                <option value=""> Active</option>
+                                <option value=""> Completed</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-column">
+                        <div class="form-group-h">
+                            <label for="orderedBy">Ordered By:</label>
+                            <input type="text" name="orderedBy" id="orderedBy" />
+                        </div>
 
-            <label for="status">Status:</label>
-            <select type="text" name="status" id="status">
-                <option value=""> choose</option>
-                <option value=""> Pending Approval</option>
-                <option value=""> Active</option>
-                <option value=""> Completed</option>
-            </select>
+                        <div class="form-group-h">
+                            <label for="ticketDate">Date:</label>
+                            <input type="date" name="ticketDate" id="ticketDate" />
+                        </div>
 
-            <label for="location">Location/LSD:</label>
-            <select type="text" name="location" id="location">
-                <option value=""> Select LSD...</option>
-                <option value=""> Pending Approval</option>
-                <option value=""> Active</option>
-                <option value=""> Completed</option>
-            </select>
-
-            <label for="orderedBy">Ordered By:
-                <input type="text" name="orderedBy" id="orderedBy" />
-
-                <label for="ticketDate">Date:</label>
-                <input type="date" name="ticketDate" id="ticketDate" />
-
-                <hr>
-                </hr>
+                        <div class="form-group-h">
+                            <label for="area">Area/Field:</label>
+                            <input type="text" name="area" id="area" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            </hr>
+            <div class="form-section-container">
                 <h2>Description of Work</h2>
                 <label for="workDesc">Description:</label>
                 <textarea name="workDesc" id="workDesc">
@@ -78,12 +104,24 @@
                     elementpath: false
                 });
                 </script>
-
-                <hr>
-                </hr>
+            </div>
+            <hr>
+            </hr>
+            <div class="form-section-container">
                 <h2>Labour</h2>
 
                 <table id="labourTable">
+                    <colgroup>
+                        <col span="1" style="width:15%">
+                        <col span="1" style="width:15%">
+                        <col span="1" style="width:15%">
+                        <col span="1" style="width:15%">
+                        <col span="1" style="width:5%">
+                        <col span="1" style="width:15%">
+                        <col span="1" style="width:5%">
+                        <col span="1" style="width:3%">
+
+                    </colgroup>
                     <thead>
                         <tr>
                             <th>Staff</th>
@@ -134,7 +172,7 @@
                             <td>
                                 <input type="number" id="overtimeHours" step=".01" />
                             <td>
-                                <button id="addLabourRow">+</button>
+                                <button class="addRow addLabourRow">+</button>
                                 <button class="removeRow">x</button>
                             </td>
 
@@ -145,8 +183,9 @@
 
                 <label for="labourSubtotal">Sub-Total</label>
                 <input type="number" id="labourSubtotal" step=".01" disabled />
-
-                <hr>
+            </div>
+            <hr>
+            <div class="form-section-container">
                 <h2>Truck</h2>
 
                 <table>
@@ -185,7 +224,7 @@
                             <td>
                                 <input type="number" id="truckTotal" step=".01" disabled />
                             </td>
-                            <td><button class="addRowButt">+</button>
+                            <td><button class="addRow">+</button>
                                 <button class="removeRow">x</button>
                             </td>
                         </tr>
@@ -195,12 +234,14 @@
 
                 <label for="labourSubtotal">Sub-Total</label>
                 <input type="number" id="labourSubtotal" step=".01" disabled />
-                <hr>
+            </div>
+            <hr>
 
-
+            <div class="form-section-container">
                 <h2>Miscellaneous</h2>
 
                 <table id="miscTable">
+
                     <thead>
                         <tr>
                             <th>Description</th>
@@ -219,7 +260,7 @@
                             <td><input type="number" id="miscQty" step=".01" /></td>
                             <td><input type="number" id="miscTotal" step=".01" disabled /></td>
                             <td>
-                                <button id="addRowButt">+</button>
+                                <button id="addRow" class="addRow">+</button>
                                 <button class="removeRow">x</button>
                             </td>
                         </tr>
@@ -231,6 +272,7 @@
 
                 <hr>
                 <input type="submit" value="Finish">
+            </div>
         </form>
     </div>
 
@@ -254,7 +296,7 @@
 
     // jQuery function to load entries on page load
     $(document).ready(function() {
-        $('#addLabourRow').click(function() {
+        $(document).on('click', '.addLabourRow', function() {
             var newRow = '<tr>' +
                 '<td><select name="staff[]">' +
                 '<option value="">Select Staff...</option>' +
@@ -267,7 +309,7 @@
                 '<td><input type="number" name="reg_hours[]"></td>' +
                 '<td><input type="number" name="overtime_rate[]"></td>' +
                 '<td><input type="number" name="overtime_hours[]"></td>' +
-                '<td><button type="button" class="removeRow">Remove</button></td>' +
+                '<td><button class="addRow addLabourRow">+</button><button class="removeRow">x</button></td>' +
                 '</tr>';
             $('#labourTable tbody').append(newRow);
         });
