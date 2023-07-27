@@ -20,7 +20,7 @@
         <h1>Edit Ticket</h1>
     </div>
 
-    <div>
+    <div class="form-container">
 
 
         <form id="ticketForm" name="ticketForm">
@@ -116,15 +116,15 @@
 
                 <table id="labourTable">
                     <colgroup>
+                        <col span="1">
                         <col span="1" style="width:15%">
-                        <col span="1" style="width:15%">
-                        <col span="1" style="width:15%">
-                        <col span="1" style="width:15%">
+                        <col span="1" style="width:10%">
+                        <col span="1" style="width:10%">
+                        <col span="1" style="width:7.5%">
+                        <col span="1" style="width:10%">
+                        <col span="1" style="width:7.5%">
+                        <col span="1" style="width:10%">
                         <col span="1" style="width:5%">
-                        <col span="1" style="width:15%">
-                        <col span="1" style="width:5%">
-                        <col span="1" style="width:5%">
-                        <col span="1" style="width:3%">
 
                     </colgroup>
                     <thead>
@@ -186,7 +186,7 @@
                                 <input type="number" class="overtimeHours" value=0.00 step=".01" />
                             </td>
                             <td>
-                                <input type="number" class="total" value="" step=".01" />
+                                <input type="number" class="total rowTotal" value="0.00" step=".01" disabled />
                             </td>
                             <td>
                                 <button class="addRow addLabourRow">+</button>
@@ -195,17 +195,34 @@
 
                         </tr>
                     </tbody>
+                    <tfoot>
+                        <tr>
+                            <th colspan="1"><label for="labourSubtotal">Sub-Total</label></th>
+                            <th colspan="4"></th>
+                            <td colspan="4" class="align-right"><input type="number" id="labourSubtotal"
+                                    class="sumSubTotal" step=".01" disabled /></td>
+                        </tr>
+
+
+
+                    </tfoot>
                 </table>
-
-
-                <label for="labourSubtotal">Sub-Total</label>
-                <input type="number" id="labourSubtotal" step=".01" disabled />
             </div>
             <hr>
             <div class="form-section-container">
                 <h2>Truck</h2>
 
                 <table>
+                    <colgroup>
+
+                        <col span="1">
+                        <col span="1" style="width:15%">
+                        <col span="1" style="width:15%">
+                        <col span="1" style="width:15%">
+                        <col span="1" style="width:10%">
+                        <col span="1" style="width:5%">
+
+                    </colgroup>
                     <thead>
                         <tr>
                             <th>Label</th>
@@ -236,18 +253,24 @@
                                 <input type="number" class="truckRate" step=".01" disabled />
                             </td>
                             <td>
-                                <input type="number" class="totalTruck" step=".01" disabled />
+                                <input type="number" class="totalTruck rowTotal" step=".01" disabled />
                             </td>
                             <td><button class="addRow">+</button>
                                 <button class="removeRow">x</button>
                             </td>
                         </tr>
                     </tbody>
+                    <tfoot>
+                        <tr>
+                            <th colspan="1"><label for="truckSubtotal">Sub-Total</label></th>
+                            <th colspan="2"></th>
+                            <th colspan="4" class="align-right"><input type="number" id="truckSubtotal"
+                                    class="sumSubTotal" step=".01" disabled /></th>
+                        </tr>
+
+                    </tfoot>
                 </table>
 
-
-                <label for="labourSubtotal">Sub-Total</label>
-                <input type="number" id="labourSubtotal" step=".01" disabled />
             </div>
             <hr>
 
@@ -255,8 +278,18 @@
                 <h2>Miscellaneous</h2>
 
                 <table id="miscTable">
+                    <colgroup>
 
+                        <col span="1">
+                        <col span="1" style="width:10%">
+                        <col span="1" style="width:10%">
+                        <col span="1" style="width:10%">
+                        <col span="1" style="width:10%">
+                        <col span="1" style="width:5%">
+
+                    </colgroup>
                     <thead>
+
                         <tr>
                             <th>Description</th>
                             <th>Cost</th>
@@ -272,18 +305,24 @@
                             <td><input type="number" id="miscCost" step=".01" /></td>
                             <td><input type="number" id="miscPrice" step=".01" /></td>
                             <td><input type="number" id="miscQty" step=".01" /></td>
-                            <td><input type="number" id="miscTotal" step=".01" disabled /></td>
+                            <td><input type="number" id="miscTotal rowTotal" step=".01" disabled /></td>
                             <td>
                                 <button id="addRow" class="addRow">+</button>
                                 <button class="removeRow">x</button>
                             </td>
                         </tr>
                     </tbody>
+                    <tfoot>
+                        <tr>
+                            <th colspan="1"><label for="miscSubtotal">Sub-Total</label></th>
+                            <th colspan="1"></th>
+                            <th colspan="4" class="align-right"><input type="number" id="miscSubtotal"
+                                    class="sumSubTotal" step=".01" disabled /></th>
+
+                        </tr>
+
+                    </tfoot>
                 </table>
-
-                <label for="miscSubtotal">Sub-Total</label>
-                <input type="number" id="miscSubtotal" step=".01" disabled />
-
                 <hr>
                 <input type="submit" value="Finish">
             </div>
@@ -311,21 +350,11 @@
     // jQuery function to load entries on page load
     $(document).ready(function() {
 
-
-        // Update the regular rate when the staff position changes
-        $(document).on('change', 'select[name="staff"]', function() {
-            var regularRateInput = $(this).closest("tr").find('input[name="regularRate"');
-            var overtimeRateInput = $(this).closest("tr").find('input[name="overtimeRate"');
-            console.log(regularRateInput)
-            regularRateInput.val(10).trigger("change")
-            overtimeRateInput.val(15).trigger('change')
-        });
-
         // Add a new row to table
         $(document).on('click', '.addRow', function(event) {
             event.preventDefault();
-            var newRow = $(this).closest('table').find("tr:last").clone();
-            $(this).closest('table').find('tbody').append(newRow);
+            var newRow = $(this).closest('table tbody').find("tr:last").clone();
+            $(this).closest('table tbody').append(newRow);
             newRow.find('input').val("")
             newRow.find('select').trigger('change')
         });
@@ -467,9 +496,22 @@
         });
 
         //round all number input to 2 digits
-        $(document).on('change', 'input[type=number]', function(event) {
-            console.log($(this).val())
+        $(document).on('change', 'input[type=number]', function() {
             $(this).val(parseFloat($(this).val()).toFixed(2) || 0.00)
+        });
+
+        //get sub totals
+        $(document).on('change', 'table input, table select', function() {
+            const tableBody = $(this).closest("tbody")
+            let subtotal = 0
+            tableBody.find("tr").each(function() {
+                subtotal += parseFloat($(this).find(".rowTotal").val())
+
+            })
+            const subtotalTargetId = $(this).closest('div').find('.sumSubTotal');
+            console.log("sub", subtotalTargetId)
+            subtotalTargetId.val(subtotal.toFixed(2))
+
 
         });
 

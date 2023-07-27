@@ -8,16 +8,27 @@
 body {
   font-family: Arial, Helvetica, sans-serif;
   color: #393944;
+}
+
+.header {
+  position: relative;
+  left: 0;
+  width: 100%;
+  background-color: #ececec;
+  border-bottom: #393944 solid 0.5px;
+}
+.header h1 {
+  max-width: 1500px;
+  margin: auto;
+  padding-left: 5px;
+}
+.form-container {
   margin: auto;
   max-width: 1500px;
 }
 
-.header {
-  background-color: #ececec;
-}
-
 h1 {
-  font-size: 1.5rem;
+  font-size: 1.15rem;
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
 }
@@ -35,12 +46,19 @@ hr {
   margin: auto;
 }
 
+label {
+  font-weight: bold;
+  font-size: 0.75rem;
+}
+
 .form-section-container {
   padding: 2rem 1rem;
+  overflow-x: auto;
 }
 
 .form-column-container {
   display: flex;
+  max-width: 1000px;
   gap: 50px;
 }
 
@@ -61,7 +79,9 @@ hr {
 select,
 input {
   background-color: white;
-  border-radius: 5px;
+  border-radius: 3px;
+  border-color: rgba(211, 211, 211, 0.5);
+  color: rgb(98, 98, 98);
   height: 1.75rem;
   padding: 0 0.75rem;
 }
@@ -95,21 +115,39 @@ input:disabled {
 }
 
 table {
+  overflow: auto;
   width: 100%;
   max-width: 1500px;
+  min-width: 1000px;
+  border-spacing: 10px 5px;
 }
 th {
   text-align: left;
+  font-size: 0.75rem;
 }
 
 td {
-  padding-right: 0.25rem;
+  white-space: nowrap;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.addRow,
+.removeRow {
+  font-size: 0.75rem;
 }
 
 td input,
 td select {
   width: 100%;
-  margin-bottom: 10px;
+}
+
+.sumSubTotal {
+  max-width: 250px;
+  width: 100%;
+}
+.align-right {
+  text-align: right;
 }
 /* Chrome, Safari, Edge, Opera */
 input::-webkit-outer-spin-button,
@@ -121,4 +159,13 @@ input::-webkit-inner-spin-button {
 /* Firefox */
 input[type="number"] {
   -moz-appearance: textfield;
+}
+
+@media screen and (max-width: 1000px) {
+  .form-column-container {
+    flex-direction: column;
+    max-width: 500px;
+    gap: 0;
+    margin: auto;
+  }
 }
