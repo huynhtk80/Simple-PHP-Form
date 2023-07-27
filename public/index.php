@@ -10,7 +10,7 @@
         referrerpolicy="origin"></script>
 </head>
 
-<body>
+<body onload="document.ticketForm.reset();">
 
 
     <?php include("../private/mysql_connection.php")?>
@@ -22,7 +22,7 @@
     <div>
 
 
-        <form id="ticketForm">
+        <form id="ticketForm" name="ticketForm">
             <div class="form-section-container">
                 <h2>Project</h2>
                 <div class="form-column-container">
