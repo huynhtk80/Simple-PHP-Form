@@ -537,6 +537,21 @@
             $(this).val(parseFloat($(this).val()).toFixed(2) || 0.00)
         });
 
+        // calculate the truck row total based on qty,rate and UOM
+        function calculateFormTotal() {
+            const subtotalsIds = $(document).find('.sumSubTotal')
+            let formTotal = 0
+
+
+            subtotalsIds.each(function() {
+                formTotal += parseFloat($(this).val()) || 0
+
+            })
+
+
+            // Update the Total input field
+            $(document).find('.formTotal').val(formTotal.toFixed(2)); // Assuming 2 decimal places
+        }
         //get sub totals
         $(document).on('change', 'table input, table select', function() {
             const tableBody = $(this).closest("tbody")
@@ -548,6 +563,7 @@
             const subtotalTargetId = $(this).closest('table').find('.sumSubTotal');
             console.log("sub", subtotalTargetId)
             subtotalTargetId.val(subtotal.toFixed(2))
+            calculateFormTotal();
         });
 
     });
