@@ -3,7 +3,8 @@
 
 <head>
     <title>Edit Ticket</title>
-    <link rel="stylesheet" href="./assets/index.css">
+    <link href="./assets/index.css" rel="stylesheet">
+    <link href="./assets/favicon.ico" rel="icon">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- <script src="https://cdn.tiny.cloud/1/qoevcjkx2rtw4bgxm09619mnpdystv5fiaexxxybxx9hl2mn/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script> -->
     <script src="https://cdn.tiny.cloud/1/qoevcjkx2rtw4bgxm09619mnpdystv5fiaexxxybxx9hl2mn/tinymce/5/tinymce.min.js"
@@ -102,7 +103,7 @@
                 <script>
                 tinymce.init({
                     selector: 'textarea',
-                    plugins: 'anchor autolink charmap codesample emoticons image link lists advlist media searchreplace table visualblocks wordcount checklist mediaembed casechange export formatpainter pageembed linkchecker a11ychecker tinymcespellchecker permanentpen powerpaste advtable advcode editimage tableofcontents footnotes mergetags autocorrect typography inlinecss fullscreen preview textcolor print',
+                    plugins: 'anchor autolink charmap codesample emoticons image link lists advlist media searchreplace table visualblocks wordcount checklist mediaembed casechange export formatpainter pageembed linkchecker a11ychecker tinymcespellchecker permanentpen powerpaste advtable advcode fullscreen preview textcolor print',
                     toolbar: 'fullscreen | undo redo | formatselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | print preview media | forecolor backcolor',
                     elementpath: false
                 });
@@ -160,18 +161,14 @@
                             </td>
                             <td>
                                 <select type="text" name="position" class="position">
-                                    <option value=""> choose</option>
-                                    <option value=""> Pending Approval</option>
-                                    <option value=""> Active</option>
-                                    <option value=""> Completed</option>
+                                    <option value=""> Select Staff First..</option>
                                 </select>
                             </td>
                             <td>
-                                <select type="text" name="uomStaff" class="uomStaff">
-                                    <option value=""> choose</option>
-                                    <option value=""> Pending Approval</option>
-                                    <option value=""> Active</option>
-                                    <option value=""> Completed</option>
+                                <select type="text" class="uomStaff" name="uomStaff" class="uomStaff">
+                                    <option value="1"> Hourly</option>
+                                    <option value="8"> Daily(8h)</option>
+                                    <option value="40"> Weekly(40h)</option>
                                 </select>
                             </td>
                             <td>
@@ -223,19 +220,16 @@
                         <tr>
                             <td>
                                 <select type="text" name="truckLabel" id="truckLabel">
-                                    <option value=""> choose</option>
-                                    <option value=""> Pending Approval</option>
-                                    <option value=""> Active</option>
-                                    <option value=""> Completed</option>
+                                    <option value=""> Select truck...</option>
+
                                 </select>
                             </td>
                             <td><input type="number" id="truckQty"></td>
                             <td>
                                 <select type="text" name="uomTruck" id="uomTruck">
-                                    <option value=""> choose</option>
-                                    <option value=""> Pending Approval</option>
-                                    <option value=""> Active</option>
-                                    <option value=""> Completed</option>
+                                    <option value="1"> Hourly</option>
+                                    <option value="8"> Daily(8h)</option>
+                                    <option value="40"> Weekly(40h)</option>
                                 </select>
                             </td>
                             <td>
@@ -274,7 +268,7 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td><input type="text" id="miscDescription" /></td>
+                            <td><input type="text" name="miscDescription" id="miscDescription" /></td>
                             <td><input type="number" id="miscCost" step=".01" /></td>
                             <td><input type="number" id="miscPrice" step=".01" /></td>
                             <td><input type="number" id="miscQty" step=".01" /></td>
@@ -328,7 +322,8 @@
         });
 
         // Add a new row to table
-        $(document).on('click', '.addRow', function() {
+        $(document).on('click', '.addRow', function(event) {
+            event.preventDefault();
             var newRow = $(this).closest('table').find("tr:last").clone();
             $(this).closest('table').find('tbody').append(newRow);
             newRow.find('input').val("")
@@ -336,7 +331,8 @@
         });
 
         // Remove a row from the table
-        $(document).on('click', '.removeRow', function() {
+        $(document).on('click', '.removeRow', function(event) {
+            event.preventDefault();
             var tableId = $(this).closest('table').attr('id');
 
             if ($('#' + tableId + ' tbody tr').length > 1) {
@@ -411,21 +407,33 @@
 
         // calculate the total based on regular rate and hours, and overtime rate and hours
         function calculateLabourTotal(row) {
-            var regularRate = parseFloat(row.find('.regularRate').val()) || 0;
-            var regularHours = parseFloat(row.find('.regularHours').val()) || 0;
-            var overtimeRate = parseFloat(row.find('.overtimeRate').val()) || 0;
-            var overtimeHours = parseFloat(row.find('.overtimeHours').val()) || 0;
+            const uomStaff = parseInt(row.find('.uomStaff').val()) || 1
+            const regularRate = parseFloat(row.find('.regularRate').val()) || 0;
+            const regularHours = parseFloat(row.find('.regularHours').val()) || 0;
+            const overtimeRate = parseFloat(row.find('.overtimeRate').val()) || 0;
+            const overtimeHours = parseFloat(row.find('.overtimeHours').val()) || 0;
 
-            var total = (regularRate * regularHours) + (overtimeRate * overtimeHours);
+            const total = (regularRate * regularHours * uomStaff) + (overtimeRate * overtimeHours * uomStaff);
 
             // Update the Total input field
             row.find('.total').val(total.toFixed(2)); // Assuming 2 decimal places
         }
 
         // on input change calculate new labour total
-        $('#labourTable').on('change', 'input', function() {
-            var row = $(this).closest('tr');
-            calculateLabourTotal(row);
+        $(document).on('change', 'table tr input, table tr select', function() {
+            const row = $(this).closest('tr');
+            const firstColName = row.find('select, input').first().attr('name')
+            console.log("input change", firstColName)
+            if (firstColName == "staff") {
+                calculateLabourTotal(row);
+            }
+            if (firstColName == "truckLabel") {
+                console.log("truck")
+            }
+            if (firstColName == "miscDescription") {
+                console.log("misc")
+            }
+
         });
 
     });
