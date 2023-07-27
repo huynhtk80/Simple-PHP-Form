@@ -1,8 +1,5 @@
-
-
-
-
 <?php
+require_once("init_dotenv.php");
 $servername = getenv('MYSQL_SERVER');
 $username = getenv('MYSQL_USER');
 $password = getenv('MYSQL_PASSWORD');
@@ -15,5 +12,5 @@ $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
   die("Connection failed: " . $conn->connect_error);
 }
-echo "Connected successfully";
+
 ?>
