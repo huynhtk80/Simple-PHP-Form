@@ -332,6 +332,7 @@
             var newRow = $(this).closest('table').find("tr:last").clone();
             $(this).closest('table').find('tbody').append(newRow);
             newRow.find('input').val("")
+            newRow.find('select').trigger('change')
         });
 
         // Remove a row from the table
