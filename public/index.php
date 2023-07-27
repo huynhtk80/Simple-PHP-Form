@@ -364,8 +364,11 @@
                     $.each(data, function(index, positions) {
                         console.log(positions)
                         targetPositionId.append(
-                            '<option value="' + positions
-                            .position_id + '">' + positions.position_name +
+                            '<option data-something="hi" value="' + positions
+                            .position_id + '" data-regular-rate="' + positions
+                            .hourly_rate + '" data-overtime-rate="' +
+                            positions.overtime_rate + '">' + positions
+                            .position_name +
                             '</option>');
                     });
                 }, 'json');
@@ -374,6 +377,19 @@
                 targetPositionId.append(
                     '<option value="">Select staff first...</option>');
             }
+
+        });
+
+        //populates rates based on v selection
+        $(document).on('change', '.position', function() {
+            var selectedPositionOption = $(this).find('option:selected')
+            const regularRate = selectedPositionOption.data("regular-rate")
+            const overtimeRate = selectedPositionOption.data("overtime-rate")
+            const targetRegId = $(this).closest("tr").find('.regularRate')
+            const targetOverId = $(this).closest("tr").find('.overtimeRate')
+
+            targetRegId.val(parseFloat(regularRate).toFixed(2))
+            targetOverId.val(parseFloat(overtimeRate).toFixed(2))
 
         });
 
@@ -404,6 +420,8 @@
             }
 
         })
+
+
 
         // calculate the total based on regular rate and hours, and overtime rate and hours
         function calculateLabourTotal(row) {
