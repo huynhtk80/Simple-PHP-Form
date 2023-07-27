@@ -176,14 +176,14 @@
                                     disabled />
                             </td>
                             <td>
-                                <input type="number" class="regularHours" value="" step=".01" />
+                                <input type="number" class="regularHours" value=0.00 step=".01" />
                             </td>
                             <td>
-                                <input type="number" class="overtimeRate" name="overtimeRate" value="" step=".01"
+                                <input type="number" class="overtimeRate" name="overtimeRate" value=0.00 step=".01"
                                     disabled />
                             </td>
                             <td>
-                                <input type="number" class="overtimeHours" value="" step=".01" />
+                                <input type="number" class="overtimeHours" value=0.00 step=".01" />
                             </td>
                             <td>
                                 <input type="number" class="total" value="" step=".01" />
@@ -219,24 +219,24 @@
                     <tbody>
                         <tr>
                             <td>
-                                <select type="text" name="truckLabel" id="truckLabel">
+                                <select type="text" name="truckLabel" class="truckLabel">
                                     <option value=""> Select truck...</option>
 
                                 </select>
                             </td>
-                            <td><input type="number" id="truckQty"></td>
+                            <td><input type="number" class="truckQty"></td>
                             <td>
-                                <select type="text" name="uomTruck" id="uomTruck">
+                                <select type="text" name="uomTruck" class="uomTruck">
                                     <option value="1"> Hourly</option>
                                     <option value="8"> Daily(8h)</option>
                                     <option value="40"> Weekly(40h)</option>
                                 </select>
                             </td>
                             <td>
-                                <input type="number" id="truckRate" step=".01" disabled />
+                                <input type="number" class="truckRate" step=".01" disabled />
                             </td>
                             <td>
-                                <input type="number" id="truckTotal" step=".01" disabled />
+                                <input type="number" class="totalTruck" step=".01" disabled />
                             </td>
                             <td><button class="addRow">+</button>
                                 <button class="removeRow">x</button>
@@ -419,6 +419,18 @@
             row.find('.total').val(total.toFixed(2)); // Assuming 2 decimal places
         }
 
+        // calculate the truck row total based on qty,rate and UOM
+        function calculateTruckTotal(row) {
+            const uomTruck = parseInt(row.find('.uomTruck').val()) || 1
+            const truckRate = parseFloat(row.find('.truckRate').val()) || 0;
+            const truckQty = parseFloat(row.find('.truckQty').val()) || 0;
+            console.log(uomTruck, truckQty, truckRate)
+            const total = (uomTruck * truckQty * uomTruck)
+
+            // Update the Total input field
+            row.find('.totalTruck').val(total.toFixed(2)); // Assuming 2 decimal places
+        }
+
         // on input change calculate new labour total
         $(document).on('change', 'table tr input, table tr select', function() {
             const row = $(this).closest('tr');
@@ -428,11 +440,18 @@
                 calculateLabourTotal(row);
             }
             if (firstColName == "truckLabel") {
-                console.log("truck")
+                calculateTruckTotal(row)
             }
             if (firstColName == "miscDescription") {
                 console.log("misc")
             }
+
+        });
+
+        //round all number input to 2 digits
+        $(document).on('change', 'input[type=number]', function(event) {
+            console.log($(this).val())
+            $(this).val(parseFloat($(this).val()).toFixed(2) || 0.00)
 
         });
 
