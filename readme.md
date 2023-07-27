@@ -20,15 +20,17 @@ As a demonstration of your skills, we ask that you complete the following code r
 - PHP 5.6
 - MySQL 5.7
 - JQuery
+- TinyMce
 
 ## How to run
 
 1. Clone the repository: `git clone https://github.com/[]`
 2. Create a new database as utilizing `mysql_db_init.sql` script
-3. Run the following command in the project directory:
+3. Utilizing the ".env.example" populate fields with your database information.
+4. Run the following command in the project directory:
 
 ```bash
 php -S localhost:4000 -t public
 ```
 
-4. Open your browser and navigate to [http://localhost:9000](http://localhost:9000) to view the pages.
+5. Open your browser and navigate to [http://localhost:9000](http://localhost:9000) to view the pages.
