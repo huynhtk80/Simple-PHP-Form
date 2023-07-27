@@ -302,12 +302,12 @@
                     <tbody>
                         <tr>
                             <td><input type="text" name="miscDescription" id="miscDescription" /></td>
-                            <td><input type="number" id="miscCost" step=".01" /></td>
-                            <td><input type="number" id="miscPrice" step=".01" /></td>
-                            <td><input type="number" id="miscQty" step=".01" /></td>
-                            <td><input type="number" id="miscTotal rowTotal" step=".01" disabled /></td>
+                            <td><input type="number" class="miscCost" step=".01" /></td>
+                            <td><input type="number" class="miscPrice" step=".01" /></td>
+                            <td><input type="number" class="miscQty" step=".01" /></td>
+                            <td><input type="number" class="miscTotal rowTotal" step=".01" disabled /></td>
                             <td>
-                                <button id="addRow" class="addRow">+</button>
+                                <button class="addRow">+</button>
                                 <button class="removeRow">x</button>
                             </td>
                         </tr>
@@ -478,6 +478,16 @@
             row.find('.totalTruck').val(total.toFixed(2)); // Assuming 2 decimal places
         }
 
+        // calculate the truck row total based on qty,rate and UOM
+        function calculateMiscTotal(row) {
+            const miscPrice = parseFloat(row.find('.miscPrice').val()) || 0;
+            const miscQty = parseFloat(row.find('.miscQty').val()) || 0;
+            const total = (miscQty * miscPrice);
+
+            // Update the Total input field
+            row.find('.miscTotal').val(total.toFixed(2)); // Assuming 2 decimal places
+        }
+
         // on input change calculate new labour total
         $(document).on('change', 'table tr input, table tr select', function() {
             const row = $(this).closest('tr');
@@ -490,7 +500,7 @@
                 calculateTruckTotal(row)
             }
             if (firstColName == "miscDescription") {
-                console.log("misc")
+                calculateMiscTotal(row)
             }
 
         });
@@ -508,7 +518,7 @@
                 subtotal += parseFloat($(this).find(".rowTotal").val())
 
             })
-            const subtotalTargetId = $(this).closest('div').find('.sumSubTotal');
+            const subtotalTargetId = $(this).closest('table').find('.sumSubTotal');
             console.log("sub", subtotalTargetId)
             subtotalTargetId.val(subtotal.toFixed(2))
 
