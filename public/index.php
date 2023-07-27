@@ -238,6 +238,18 @@
                             <td>
                                 <select type="text" name="truckLabel" class="truckLabel">
                                     <option value=""> Select truck...</option>
+                                    <?php
+                                    // Fetch equipment names from the database
+                                    $sql = "SELECT equipment_id, equipment_name, rental_rate FROM equipment"; 
+                                    $result = mysqli_query($conn, $sql);
+
+                                    if (mysqli_num_rows($result) > 0) {
+
+                                        while ($row = mysqli_fetch_assoc($result)) {
+                                            echo '<option  value="' . $row['equipment_id'] . '" data-rental-rate="'.$row['rental_rate'].'">' . $row['equipment_name'] . '</option>';
+                                        }
+                                    }
+                                ?>
 
                                 </select>
                             </td>
@@ -323,8 +335,15 @@
 
                     </tfoot>
                 </table>
-                <hr>
-                <input type="submit" value="Finish">
+            </div>
+            <hr>
+
+            <div class="form-footer-container">
+                <div class="form-group-total">
+                    <label for="formTotal">Total: </label>
+                    <input type="number" class="formTotal" value="0.00" />
+                </div>
+                <input type="submit" class="submitBtn" value="Finish">
             </div>
         </form>
     </div>
@@ -409,7 +428,7 @@
 
         });
 
-        //populates rates based on v selection
+        //populates rates based on positions selection
         $(document).on('change', '.position', function() {
             var selectedPositionOption = $(this).find('option:selected')
             const regularRate = selectedPositionOption.data("regular-rate")
@@ -420,6 +439,14 @@
             targetRegId.val(parseFloat(regularRate).toFixed(2))
             targetOverId.val(parseFloat(overtimeRate).toFixed(2))
 
+        });
+
+        //populates equipment rates based on truck selection
+        $(document).on('change', '.truckLabel', function() {
+            var selectedPositionOption = $(this).find('option:selected')
+            const regularRate = selectedPositionOption.data("rental-rate")
+            const targetRegId = $(this).closest("tr").find('.truckRate')
+            targetRegId.val(parseFloat(regularRate).toFixed(2))
         });
 
         // populate job option onchange of customer
@@ -471,8 +498,8 @@
             const uomTruck = parseInt(row.find('.uomTruck').val()) || 1
             const truckRate = parseFloat(row.find('.truckRate').val()) || 0;
             const truckQty = parseFloat(row.find('.truckQty').val()) || 0;
-            console.log(uomTruck, truckQty, truckRate)
-            const total = (uomTruck * truckQty * uomTruck)
+
+            const total = (truckRate * truckQty * uomTruck)
 
             // Update the Total input field
             row.find('.totalTruck').val(total.toFixed(2)); // Assuming 2 decimal places
@@ -521,8 +548,6 @@
             const subtotalTargetId = $(this).closest('table').find('.sumSubTotal');
             console.log("sub", subtotalTargetId)
             subtotalTargetId.val(subtotal.toFixed(2))
-
-
         });
 
     });

@@ -149,6 +149,34 @@ td select {
 .align-right {
   text-align: right;
 }
+
+.submitBtn {
+  background-color: grey;
+  color: white;
+  padding: 5px 30px;
+  border-radius: 3px;
+  align-self: self-end;
+}
+
+.form-footer-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  padding: 30px 0;
+}
+
+.form-footer-container label {
+  font-size: 1.25rem;
+}
+.form-footer-container .formTotal {
+  font-size: 1.25rem;
+  height: 2rem;
+}
+.form-group-total {
+  padding: 5px 0;
+}
+
 /* Chrome, Safari, Edge, Opera */
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
