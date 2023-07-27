@@ -12,7 +12,7 @@
 
 <body>
 
-    <?php include("../private/init_dotenv.php")?>
+
     <?php include("../private/mysql_connection.php")?>
 
     <div class="header">
@@ -33,21 +33,24 @@
                                 <option value=""> choose</option>
                                 <?php
                                     // Fetch customer names from the database
-                                    $sql = "SELECT staff_name, position name FROM staff"; // Replace 'customer_table' with the actual table name
+                                    $sql = "SELECT customer_id, customer_name FROM customer"; // Replace 'customer_table' with the actual table name
                                     $result = mysqli_query($conn, $sql);
 
                                     if (mysqli_num_rows($result) > 0) {
+
                                         while ($row = mysqli_fetch_assoc($result)) {
-                                            echo '<option value="' . $row['staff_name'] . '">' . $row['staff_name'] . '</option>';
+                                            echo '<option  value="' . $row['customer_id'] . '">' . $row['customer_name'] . '</option>';
                                         }
                                     }
                                 ?>
                             </select>
+
                         </div>
                         <div class="form-group-h">
                             <label for="jobName">Job Name:</label>
                             <select type="text" name="jobName" id="jobName">
                                 <option value=""> choose</option>
+
                             </select>
                         </div>
                         <div class="form-group-h">
@@ -119,6 +122,7 @@
                         <col span="1" style="width:5%">
                         <col span="1" style="width:15%">
                         <col span="1" style="width:5%">
+                        <col span="1" style="width:5%">
                         <col span="1" style="width:3%">
 
                     </colgroup>
@@ -131,13 +135,31 @@
                             <th>Reg Hours</th>
                             <th>Overtime Rate</th>
                             <th>Overtime</th>
+                            <th>Total</th>
                             <th></th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
                             <td>
-                                <select type="text" name="staff" id="staff">
+                                <select type="text" name="staff" class="staff">
+                                    <option value="">Select Staff...</option>
+                                    <?php
+                                    // Fetch staff names from the database
+                                    $sql = "SELECT staff_id, staff_name FROM staff"; // Replace 'staff_table' with the actual table name
+                                    $result = mysqli_query($conn, $sql);
+
+                                    if (mysqli_num_rows($result) > 0) {
+
+                                        while ($row = mysqli_fetch_assoc($result)) {
+                                            echo '<option  value="' . $row['staff_id'] . '">' . $row['staff_name'] . '</option>';
+                                        }
+                                    }
+                                ?>
+                                </select>
+                            </td>
+                            <td>
+                                <select type="text" name="position" class="position">
                                     <option value=""> choose</option>
                                     <option value=""> Pending Approval</option>
                                     <option value=""> Active</option>
@@ -145,7 +167,7 @@
                                 </select>
                             </td>
                             <td>
-                                <select type="text" name="position" id="position">
+                                <select type="text" name="uomStaff" class="uomStaff">
                                     <option value=""> choose</option>
                                     <option value=""> Pending Approval</option>
                                     <option value=""> Active</option>
@@ -153,24 +175,22 @@
                                 </select>
                             </td>
                             <td>
-                                <select type="text" name="uomStaff" id="uomStaff">
-                                    <option value=""> choose</option>
-                                    <option value=""> Pending Approval</option>
-                                    <option value=""> Active</option>
-                                    <option value=""> Completed</option>
-                                </select>
+                                <input type="number" class="regularRate" name="regularRate" step=".01" value=""
+                                    disabled />
                             </td>
                             <td>
-                                <input type="number" id="regularRate" step=".01" disabled />
+                                <input type="number" class="regularHours" value="" step=".01" />
                             </td>
                             <td>
-                                <input type="number" id="regularHours" step=".01" />
+                                <input type="number" class="overtimeRate" name="overtimeRate" value="" step=".01"
+                                    disabled />
                             </td>
                             <td>
-                                <input type="number" id="overtimeRate" step=".01" disabled />
+                                <input type="number" class="overtimeHours" value="" step=".01" />
                             </td>
                             <td>
-                                <input type="number" id="overtimeHours" step=".01" />
+                                <input type="number" class="total" value="" step=".01" />
+                            </td>
                             <td>
                                 <button class="addRow addLabourRow">+</button>
                                 <button class="removeRow">x</button>
@@ -296,55 +316,117 @@
 
     // jQuery function to load entries on page load
     $(document).ready(function() {
-        $(document).on('click', '.addLabourRow', function() {
-            var newRow = '<tr>' +
-                '<td><select name="staff[]">' +
-                '<option value="">Select Staff...</option>' +
-                '<option value="tim">Tim</option>' +
-                '<option value="bob">bob</option>' +
-                '</select></td>' +
-                '<td><input type="text" name="position[]"></td>' +
-                '<td><input type="text" name="uom[]"></td>' +
-                '<td><input type="number" name="regular_rate[]"></td>' +
-                '<td><input type="number" name="reg_hours[]"></td>' +
-                '<td><input type="number" name="overtime_rate[]"></td>' +
-                '<td><input type="number" name="overtime_hours[]"></td>' +
-                '<td><button class="addRow addLabourRow">+</button><button class="removeRow">x</button></td>' +
-                '</tr>';
-            $('#labourTable tbody').append(newRow);
-        });
 
-        function updateRegularRate(element) {
-            var selectedPosition = $(element).val();
-            var regularRateInput = $(element).closest('tr').find('input[name="regular_rate[]"]');
-
-            // You can have a mapping here to set the regular rate based on the selected staff position
-            var rateMap = {
-                'position1': 10, // Regular rate for Position 1
-                'position2': 15, // Regular rate for Position 2
-                'tim': 100,
-                'bob': 25
-                // Add more mappings for other staff positions
-            };
-
-            // Update the regular rate input value based on the selected staff position
-            regularRateInput.val(rateMap[selectedPosition]);
-        }
 
         // Update the regular rate when the staff position changes
-        $(document).on('change', 'select[name="staff[]"]', function() {
-            updateRegularRate(this);
+        $(document).on('change', 'select[name="staff"]', function() {
+            var regularRateInput = $(this).closest("tr").find('input[name="regularRate"');
+            var overtimeRateInput = $(this).closest("tr").find('input[name="overtimeRate"');
+            console.log(regularRateInput)
+            regularRateInput.val(10).trigger("change")
+            overtimeRateInput.val(15).trigger('change')
+        });
+
+        // Add a new row to table
+        $(document).on('click', '.addRow', function() {
+            var newRow = $(this).closest('table').find("tr:last").clone();
+            $(this).closest('table').find('tbody').append(newRow);
+            newRow.find('input').val("")
         });
 
         // Remove a row from the table
         $(document).on('click', '.removeRow', function() {
             var tableId = $(this).closest('table').attr('id');
+
             if ($('#' + tableId + ' tbody tr').length > 1) {
-                $(this).closest('tr').remove();
+                if (confirm('Are you sure you want to remove this row?')) {
+                    $(this).closest('tr').remove();
+                }
             } else {
                 alert("You cannot remove the last row.");
             }
+
         });
+
+        //populates positions based on staff selection
+        $(document).on('change', '.staff', function() {
+            var selectedStaffId = $(this).val();
+            const targetPositionId = $(this).closest("tr").find('.position')
+
+            if (!selectedStaffId == "") {
+                $.post('get_positions.php', {
+                    staff_id: selectedStaffId
+                }, function(data) {
+                    // Clear existing options in the job dropdown
+                    targetPositionId.empty();
+                    targetPositionId.append(
+                        '<option value="">Select job...</option>');
+                    console.log("data: ", data)
+
+                    // Populate the job dropdown options
+                    $.each(data, function(index, positions) {
+                        console.log(positions)
+                        targetPositionId.append(
+                            '<option value="' + positions
+                            .position_id + '">' + positions.position_name +
+                            '</option>');
+                    });
+                }, 'json');
+            } else {
+                targetPositionId.empty();
+                targetPositionId.append(
+                    '<option value="">Select staff first...</option>');
+            }
+
+        });
+
+        // populate job option onchange of customer
+        $('#customerName').on('change', function() {
+            var selectedCustomerId = $(this).val();
+
+
+            // Get the job associated with the selected customer
+            if (!selectedCustomerId == "") {
+                $.post('get_jobs.php', {
+                    customer_id: selectedCustomerId
+                }, function(data) {
+                    // Clear existing options in the job dropdown
+                    $('#jobName').empty();
+                    $('#jobName').append('<option value="">Select job...</option>');
+                    console.log(data)
+
+                    // Populate the job dropdown options
+                    $.each(data, function(index, jobs) {
+                        $('#jobName').append('<option value="' + jobs
+                            .job_id + '">' + jobs.job_name + '</option>');
+                    });
+                }, 'json');
+            } else {
+                $('#jobName').empty();
+                $('#jobName').append('<option value="">Select customer first...</option>');
+            }
+
+        })
+
+        // calculate the total based on regular rate and hours, and overtime rate and hours
+        function calculateLabourTotal(row) {
+            var regularRate = parseFloat(row.find('.regularRate').val()) || 0;
+            var regularHours = parseFloat(row.find('.regularHours').val()) || 0;
+            var overtimeRate = parseFloat(row.find('.overtimeRate').val()) || 0;
+            var overtimeHours = parseFloat(row.find('.overtimeHours').val()) || 0;
+
+            var total = (regularRate * regularHours) + (overtimeRate * overtimeHours);
+
+            // Update the Total input field
+            row.find('.total').val(total.toFixed(2)); // Assuming 2 decimal places
+        }
+
+        // on input change calculate new labour total
+        $('#labourTable').on('change', 'input', function() {
+            var row = $(this).closest('tr');
+            calculateLabourTotal(row);
+        });
+
     });
     </script>
 </body>
