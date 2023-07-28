@@ -13,17 +13,11 @@
 </head>
 
 <body onload="document.ticketForm.reset(); tinyMCE.activeEditor.setContent('');">
-
-
-
-
     <div class="header">
         <h1>Edit Ticket</h1>
     </div>
 
     <div class="form-container">
-
-
         <form action="./functions/save_entry.php" method="post" id="ticketForm" name="ticketForm">
             <div class="form-section-container">
                 <h2>Project</h2>
@@ -31,7 +25,7 @@
                     <div class="form-column">
                         <div class="form-group-h">
                             <label for="customerName">Customer Name:</label>
-                            <select type="text" name="customerName" id="customerName">
+                            <select type="text" name="customerName" id="customerName" required>
                                 <option value=""> Select Customer...</option>
                                 <?php include("./functions/get_customers.php")?>
                             </select>
@@ -39,14 +33,14 @@
                         </div>
                         <div class="form-group-h">
                             <label for="jobName">Job Name:</label>
-                            <select type="text" name="jobName" id="jobName">
+                            <select type="text" name="jobName" id="jobName" required>
                                 <option value=""> Select Customer first..</option>
 
                             </select>
                         </div>
                         <div class="form-group-h">
                             <label for="status">Status:</label>
-                            <select name="status" id="status">
+                            <select name="status" id="status" required>
                                 <option value=""> Select status..</option>
                                 <option value="Active"> Active</option>
                                 <option value="Pending"> Pending</option>
@@ -57,7 +51,7 @@
 
                         <div class="form-group-h">
                             <label for="location">Location/LSD:</label>
-                            <select name="location" id="location">
+                            <select name="location" id="location" required>
                                 <option value=""> Select Job First...</option>
 
                             </select>
@@ -65,12 +59,12 @@
                     </div>
                     <div class="form-column">
                         <div class="form-group-h">
-                            <label for="orderedBy">Ordered By:</label>
+                            <label for="orderedBy" required>Ordered By:</label>
                             <input type="text" name="orderedBy" id="orderedBy" />
                         </div>
 
                         <div class="form-group-h">
-                            <label for="ticketDate">Date:</label>
+                            <label for="ticketDate" required>Date:</label>
                             <input type="date" name="ticketDate" id="ticketDate" />
                         </div>
 
@@ -87,7 +81,7 @@
                 <h2>Description of Work</h2>
                 <label for="workDesc">Description:</label>
                 <textarea name="workDesc" id="workDesc">
-                                    Work description...
+
             </textarea>
                 <script>
                 tinymce.init({

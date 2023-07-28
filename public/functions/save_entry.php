@@ -35,73 +35,78 @@ $miscQtyArr = $_POST['miscQty'];
 
 mysqli_begin_transaction($conn);
 
-//try catch not compatible with mysql 5.7
-try{
-    // Insert data into the main ticket table
-    $sql = "INSERT INTO ticket (customer_id, job_id, job_status, location_id, ordered_by, ticket_date, area, work_description) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("iisissss", $customerId, $jobId, $status, $locationId, $orderedBy, $ticketDate, $area, $workDesc);
-    $stmt->execute();
-    $ticketId = $stmt->insert_id; // Get the inserted ticket ID for later use
-
-    // Insert labour data into the labour table
-    for ($i = 0; $i < count($staffArr); $i++) {
-        $staff = $staffArr[$i];
-        $position = $positionArr[$i];
-        $uomStaff = $uomStaffArr[$i];
-        $regularRate = $regularRateArr[$i];
-        $regularHours = $regularHoursArr[$i];
-        $overtimeRate = $overtimeRateArr[$i];
-        $overtimeHours = $overtimeHoursArr[$i];
-
-        $sql = "INSERT INTO ticket_labour (ticket_id, staff_id, position_id, uom_staff, regular_rate, regular_hours, overtime_rate, overtime_hours) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("iiiidddd", $ticketId, $staff, $position, $uomStaff, $regularRate, $regularHours, $overtimeRate, $overtimeHours);
-        $stmt->execute();
-    }
-
-    // Insert truck data into the truck table
-    for ($i = 0; $i < count($truckLabelArr); $i++) {
-        $truckLabel = $truckLabelArr[$i];
-        $truckQty = $truckQtyArr[$i];
-        $uomTruck = $uomTruckArr[$i];
-        $truckRate = $truckRate[$i];
-
-        $sql = "INSERT INTO ticket_equipment (ticket_id, equipment_id, rental_qty, uom_truck, rental_rate) VALUES (?, ?, ?, ?,?)";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("iiddd", $ticketId, $truckLabel, $truckQty, $uomTruck,$truckRate);
-        $stmt->execute();
-    }
-
-    // Insert miscellaneous data into the miscellaneous table
-    for ($i = 0; $i < count($miscDescriptionArr); $i++) {
-        $miscDescription = $miscDescriptionArr[$i];
-        $miscCost = $miscCostArr[$i];
-        $miscPrice = $miscPriceArr[$i];
-        $miscQty = $miscQtyArr[$i];
-
-        $sql = "INSERT INTO ticket_misc (ticket_id, misc_description, cost, price, misc_quantity) VALUES (?, ?, ?, ?, ?)";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("isddd", $ticketId, $miscDescription, $miscCost, $miscPrice, $miscQty);
-        $stmt->execute();
-
-        if(!mysqli_commit($conn)){
-            echo mysqli_error($conn);
-        }else
-        echo "All data saved successfully!";
-        
-    }
-}catch(Exception $e){
-    // Rollback the transaction if any insert fails
-    mysqli_rollback($conn);
-    echo "Error: " . $e->getMessage();
+// Insert data into the main ticket table
+$sql = "INSERT INTO ticket (customer_id, job_id, job_status, location_id, ordered_by, ticket_date, area, work_description) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+$stmt = $conn->prepare($sql);
+if(!$stmt){
+    printf("Errorcode: %d\n", $conn->errno);
 }
-    // Close the database connection
-    $stmt->close();
-    $conn->close();
+$stmt->bind_param("iisissss", $customerId, $jobId, $status, $locationId, $orderedBy, $ticketDate, $area, $workDesc);
+$stmt->execute();
+$ticketId = $stmt->insert_id; // Get the inserted ticket ID for later use
 
-    // Redirect to a success page or display a success message
-    // header("Location: success_page.php");
-    exit();
+// Insert labour data into the labour table
+for ($i = 0; $i < count($staffArr); $i++) {
+    $staff = $staffArr[$i];
+    $position = $positionArr[$i];
+    $uomStaff = $uomStaffArr[$i];
+    $regularRate = $regularRateArr[$i];
+    $regularHours = $regularHoursArr[$i];
+    $overtimeRate = $overtimeRateArr[$i];
+    $overtimeHours = $overtimeHoursArr[$i];
+
+    $sql = "INSERT INTO ticket_labour (ticket_id, staff_id, position_id, uom_staff, regular_rate, regular_hours, overtime_rate, overtime_hours) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    $stmt = $conn->prepare($sql);
+    if(!$stmt){
+        printf("Errorcode: %d\n", $conn->errno);
+    }
+    $stmt->bind_param("iiiidddd", $ticketId, $staff, $position, $uomStaff, $regularRate, $regularHours, $overtimeRate, $overtimeHours);
+    $stmt->execute();
+    
+}
+
+// Insert truck data into the truck table
+for ($i = 0; $i < count($truckLabelArr); $i++) {
+    $truckLabel = $truckLabelArr[$i];
+    $truckQty = $truckQtyArr[$i];
+    $uomTruck = $uomTruckArr[$i];
+    $truckRate = $truckRate[$i];
+
+    $sql = "INSERT INTO ticket_equipment (ticket_id, equipment_id, rental_qty, uom_truck, rental_rate) VALUES (?, ?, ?, ?,?)";
+    $stmt = $conn->prepare($sql);
+    if(!$stmt){
+        printf("Errorcode: %d\n", $conn->errno);
+    }
+    $stmt->bind_param("iiddd", $ticketId, $truckLabel, $truckQty, $uomTruck,$truckRate);
+    $stmt->execute();
+}
+
+// Insert miscellaneous data into the miscellaneous table
+for ($i = 0; $i < count($miscDescriptionArr); $i++) {
+    $miscDescription = $miscDescriptionArr[$i];
+    $miscCost = $miscCostArr[$i];
+    $miscPrice = $miscPriceArr[$i];
+    $miscQty = $miscQtyArr[$i];
+
+    $sql = "INSERT INTO ticket_misc (ticket_id, misc_description, cost, price, misc_quantity) VALUES (?, ?, ?, ?, ?)";
+    $stmt = $conn->prepare($sql);
+    if(!$stmt){
+        printf("Errorcode: %d\n", $conn->errno);
+    }
+    $stmt->bind_param("isddd", $ticketId, $miscDescription, $miscCost, $miscPrice, $miscQty);
+    $stmt->execute();
+}
+
+if(!mysqli_commit($conn)){
+    echo("error");
+};
+
+// Close the database connection
+$stmt->close();
+$conn->close();
+
+// Redirect to a success page or display a success message
+// header("Location: success_page.php");
+exit();
 
 ?>
