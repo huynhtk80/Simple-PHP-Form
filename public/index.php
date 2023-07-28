@@ -58,13 +58,13 @@
                     </div>
                     <div class="form-column">
                         <div class="form-group-h">
-                            <label for="orderedBy" required>Ordered By:</label>
-                            <input type="text" name="orderedBy" id="orderedBy" />
+                            <label for="orderedBy">Ordered By:</label>
+                            <input type="text" name="orderedBy" id="orderedBy" required />
                         </div>
 
                         <div class="form-group-h">
-                            <label for="ticketDate" required>Date:</label>
-                            <input type="date" name="ticketDate" id="ticketDate" />
+                            <label for="ticketDate">Date:</label>
+                            <input type="date" name="ticketDate" id="ticketDate" required />
                         </div>
 
                         <div class="form-group-h">
