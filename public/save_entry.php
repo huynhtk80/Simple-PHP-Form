@@ -69,4 +69,25 @@ for ($i = 0; $i < count($truckLabelArr); $i++) {
     $stmt->execute();
 }
 
+// Insert miscellaneous data into the miscellaneous table
+for ($i = 0; $i < count($miscDescriptionArr); $i++) {
+    $miscDescription = $miscDescriptionArr[$i];
+    $miscCost = $miscCostArr[$i];
+    $miscPrice = $miscPriceArr[$i];
+    $miscQty = $miscQtyArr[$i];
+
+    $sql = "INSERT INTO ticket_misc (ticket_id, misc_description, cost, price, quantity) VALUES (?, ?, ?, ?, ?)";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("isddd", $ticketId, $miscDescription, $miscCost, $miscPrice, $miscQty);
+    $stmt->execute();
+}
+
+    // Close the database connection
+    $stmt->close();
+    $conn->close();
+
+    // Redirect to a success page or display a success message
+    header("Location: success_page.php");
+    exit();
+
 ?>
