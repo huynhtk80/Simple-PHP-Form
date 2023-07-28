@@ -31,7 +31,7 @@
                         <div class="form-group-h">
                             <label for="customerName">Customer Name:</label>
                             <select type="text" name="customerName" id="customerName">
-                                <option value=""> choose</option>
+                                <option value=""> Select Customer...</option>
                                 <?php
                                     // Fetch customer names from the database
                                     $sql = "SELECT customer_id, customer_name FROM customer"; // Replace 'customer_table' with the actual table name
@@ -457,7 +457,6 @@
         $('#customerName').on('change', function() {
             var selectedCustomerId = $(this).val();
 
-
             // Get the job associated with the selected customer
             if (!selectedCustomerId == "") {
                 $.post('get_jobs.php', {
@@ -469,9 +468,35 @@
                     console.log(data)
 
                     // Populate the job dropdown options
-                    $.each(data, function(index, jobs) {
-                        $('#jobName').append('<option value="' + jobs
-                            .job_id + '">' + jobs.job_name + '</option>');
+                    $.each(data, function(index, location) {
+                        $('#jobName').append('<option value="' + location
+                            .job_id + '">' + location.job_name + '</option>');
+                    });
+                }, 'json');
+            } else {
+                $('#jobName').empty();
+                $('#jobName').append('<option value="">Select customer first...</option>');
+            }
+
+        })
+
+        // populate location option onchange of job
+        $('#jobName').on('change', function() {
+            var selectedJobId = $(this).val();
+
+            // Get the job associated with the selected customer
+            if (!selectedJobId == "") {
+                $.post('get_locations.php', {
+                    job_id: selectedJobId
+                }, function(data) {
+                    // Clear existing options in the job dropdown
+                    $('#location').empty();
+                    $('#location').append('<option value="">Select location...</option>');
+                    console.log("datalocationg", data)
+                    // Populate the job dropdown options
+                    $.each(data, function(index, location) {
+                        $('#location').append('<option value="' + location
+                            .job_id + '">' + location.location_name + '</option>');
                     });
                 }, 'json');
             } else {
