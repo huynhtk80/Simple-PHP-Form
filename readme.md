@@ -34,3 +34,8 @@ php -S localhost:4000 -t public
 ```
 
 5. Open your browser and navigate to [http://localhost:4000](http://localhost:4000) to view the pages.
+
+## Issues and To Do
+
+- Add: error handing to save_entry, try catch not throwing errors for sql 5.7. Getting to success page without data submission.
+- Add: Do not add Row if row is empty.
