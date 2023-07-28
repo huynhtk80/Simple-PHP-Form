@@ -144,7 +144,7 @@ $(document).ready(function () {
           $.each(data, function (index, location) {
             $("#location").append(
               '<option value="' +
-                location.job_id +
+                location.location_id +
                 '">' +
                 location.location_name +
                 "</option>"
