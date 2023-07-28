@@ -23,7 +23,7 @@
     <div class="form-container">
 
 
-        <form id="ticketForm" name="ticketForm">
+        <form action="save_entry.php" method="post" id="ticketForm" name="ticketForm">
             <div class="form-section-container">
                 <h2>Project</h2>
                 <div class="form-column-container">
@@ -50,27 +50,26 @@
                         <div class="form-group-h">
                             <label for="jobName">Job Name:</label>
                             <select type="text" name="jobName" id="jobName">
-                                <option value=""> choose</option>
+                                <option value=""> Select Customer first..</option>
 
                             </select>
                         </div>
                         <div class="form-group-h">
                             <label for="status">Status:</label>
                             <select name="status" id="status">
-                                <option value=""> choose</option>
-                                <option value=""> Pending Approval</option>
-                                <option value=""> Active</option>
-                                <option value=""> Completed</option>
+                                <option value=""> Select status..</option>
+                                <option value="Active"> Active</option>
+                                <option value="Pending"> Pending</option>
+                                <option value="Invoiced"> Invoiced</option>
+                                <option value="Archived"> Archived</option>
                             </select>
                         </div>
 
                         <div class="form-group-h">
                             <label for="location">Location/LSD:</label>
                             <select name="location" id="location">
-                                <option value=""> Select LSD...</option>
-                                <option value=""> Pending Approval</option>
-                                <option value=""> Active</option>
-                                <option value=""> Completed</option>
+                                <option value=""> Select Job First...</option>
+                                <option value="2"> Select Job First...</option>
                             </select>
                         </div>
                     </div>
@@ -143,7 +142,7 @@
                     <tbody>
                         <tr>
                             <td>
-                                <select type="text" name="staff" class="staff">
+                                <select name="staff[]" class="staff">
                                     <option value="">Select Staff...</option>
                                     <?php
                                     // Fetch staff names from the database
@@ -160,36 +159,39 @@
                                 </select>
                             </td>
                             <td>
-                                <select type="text" name="position" class="position">
+                                <select name="position[]" class="position">
                                     <option value=""> Select Staff First..</option>
+
                                 </select>
                             </td>
                             <td>
-                                <select type="text" class="uomStaff" name="uomStaff" class="uomStaff">
+                                <select class="uomStaff" name="uomStaff[]" class="uomStaff">
                                     <option value="1"> Hourly</option>
                                     <option value="8"> Daily(8h)</option>
                                     <option value="40"> Weekly(40h)</option>
                                 </select>
                             </td>
                             <td>
-                                <input type="number" class="regularRate" name="regularRate" step=".01" value=""
-                                    disabled />
+                                <input type="number" class="regularRate" name="regularRate[]" step=".01" value=""
+                                    readonly />
                             </td>
                             <td>
-                                <input type="number" class="regularHours" value=0.00 step=".01" />
+                                <input type="number" class="regularHours" name="regularHours[]" value=0.00 step=".01" />
                             </td>
                             <td>
-                                <input type="number" class="overtimeRate" name="overtimeRate" value=0.00 step=".01"
-                                    disabled />
+                                <input type="number" class="overtimeRate" name="overtimeRate[]" value=0.00 step=".01"
+                                    readonly />
                             </td>
                             <td>
-                                <input type="number" class="overtimeHours" value=0.00 step=".01" />
+                                <input type="number" class="overtimeHours" name="overtimeHours[]" value=0.00
+                                    step=".01" />
                             </td>
                             <td>
-                                <input type="number" class="total rowTotal" value="0.00" step=".01" disabled />
+                                <input type="number" class="total rowTotal" name='labourRowTotal[]' value="0.00"
+                                    step=".01" readonly />
                             </td>
                             <td>
-                                <button class="addRow addLabourRow">+</button>
+                                <button class="addRow">+</button>
                                 <button class="removeRow">x</button>
                             </td>
 
@@ -199,8 +201,8 @@
                         <tr>
                             <th colspan="1"><label for="labourSubtotal">Sub-Total</label></th>
                             <th colspan="4"></th>
-                            <td colspan="4" class="align-right"><input type="number" id="labourSubtotal"
-                                    class="sumSubTotal" step=".01" disabled /></td>
+                            <td colspan="4" class="align-right"><input type="number" name="labourSubtotal"
+                                    id="labourSubtotal" class="sumSubTotal" step=".01" readonly /></td>
                         </tr>
 
 
@@ -236,7 +238,7 @@
                     <tbody>
                         <tr>
                             <td>
-                                <select type="text" name="truckLabel" class="truckLabel">
+                                <select type="text" name="truckLabel[]" class="truckLabel">
                                     <option value=""> Select truck...</option>
                                     <?php
                                     // Fetch equipment names from the database
@@ -253,19 +255,20 @@
 
                                 </select>
                             </td>
-                            <td><input type="number" class="truckQty"></td>
+                            <td><input type="number" class="truckQty" name="truckQty[]"></td>
                             <td>
-                                <select type="text" name="uomTruck" class="uomTruck">
+                                <select type="text" name="uomTruck[]" class="uomTruck">
                                     <option value="1"> Hourly</option>
                                     <option value="8"> Daily(8h)</option>
                                     <option value="40"> Weekly(40h)</option>
                                 </select>
                             </td>
                             <td>
-                                <input type="number" class="truckRate" step=".01" disabled />
+                                <input type="number" class="truckRate" name="truckRate[]" step=".01" readonly />
                             </td>
                             <td>
-                                <input type="number" class="totalTruck rowTotal" step=".01" disabled />
+                                <input type="number" class="totalTruck rowTotal" name="truckRowTotal[]" step=".01"
+                                    readonly />
                             </td>
                             <td><button class="addRow">+</button>
                                 <button class="removeRow">x</button>
@@ -277,7 +280,7 @@
                             <th colspan="1"><label for="truckSubtotal">Sub-Total</label></th>
                             <th colspan="2"></th>
                             <th colspan="4" class="align-right"><input type="number" id="truckSubtotal"
-                                    class="sumSubTotal" step=".01" disabled /></th>
+                                    class="sumSubTotal" step=".01" readonly /></th>
                         </tr>
 
                     </tfoot>
@@ -313,11 +316,12 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td><input type="text" name="miscDescription" id="miscDescription" /></td>
-                            <td><input type="number" class="miscCost" step=".01" /></td>
-                            <td><input type="number" class="miscPrice" step=".01" /></td>
-                            <td><input type="number" class="miscQty" step=".01" /></td>
-                            <td><input type="number" class="miscTotal rowTotal" step=".01" disabled /></td>
+                            <td><input type="text" name="miscDescription[]" id="miscDescription" /></td>
+                            <td><input type="number" class="miscCost" name="miscCost[]" step=".01" /></td>
+                            <td><input type="number" class="miscPrice" name="miscPrice[]" step=".01" /></td>
+                            <td><input type="number" class="miscQty" name='miscQty[]' step=".01" /></td>
+                            <td><input type="number" class="miscTotal rowTotal" name="miscRowTotal[]" step=".01"
+                                    readonly /></td>
                             <td>
                                 <button class="addRow">+</button>
                                 <button class="removeRow">x</button>
@@ -329,7 +333,7 @@
                             <th colspan="1"><label for="miscSubtotal">Sub-Total</label></th>
                             <th colspan="1"></th>
                             <th colspan="4" class="align-right"><input type="number" id="miscSubtotal"
-                                    class="sumSubTotal" step=".01" disabled /></th>
+                                    class="sumSubTotal" name="miscSubtotal" step=".01" readonly /></th>
 
                         </tr>
 
@@ -341,7 +345,7 @@
             <div class="form-footer-container">
                 <div class="form-group-total">
                     <label for="formTotal">Total: </label>
-                    <input type="number" class="formTotal" value="0.00" />
+                    <input type="number" class="formTotal" step=".01" value="0.00" />
                 </div>
                 <input type="submit" class="submitBtn" value="Finish">
             </div>
@@ -351,20 +355,20 @@
 
     <script>
     // jQuery function to handle form submission
-    $('#ticketForm').submit(function(e) {
-        e.preventDefault();
-        var name = $('#name').val();
-        var email = $('#email').val();
-        $.post('save_entry.php', {
-            name: name,
-            email: email
-        }, function(data) {
-            if (data.success) {
-                $('#entriesList').append('<li>' + name + ' - ' + email + '</li>');
-                $('#name, #email').val('');
-            }
-        }, 'json');
-    });
+    // $('#ticketForm').submit(function(e) {
+    //     e.preventDefault();
+    //     var name = $('#name').val();
+    //     var email = $('#email').val();
+    //     $.post('save_entry.php', {
+    //         name: name,
+    //         email: email
+    //     }, function(data) {
+    //         if (data.success) {
+    //             $('#entriesList').append('<li>' + name + ' - ' + email + '</li>');
+    //             $('#name, #email').val('');
+    //         }
+    //     }, 'json');
+    // });
 
     // jQuery function to load entries on page load
     $(document).ready(function() {
@@ -486,7 +490,7 @@
             const regularHours = parseFloat(row.find('.regularHours').val()) || 0;
             const overtimeRate = parseFloat(row.find('.overtimeRate').val()) || 0;
             const overtimeHours = parseFloat(row.find('.overtimeHours').val()) || 0;
-
+            console.log("labour row", row)
             const total = (regularRate * regularHours * uomStaff) + (overtimeRate * overtimeHours * uomStaff);
 
             // Update the Total input field
@@ -498,7 +502,7 @@
             const uomTruck = parseInt(row.find('.uomTruck').val()) || 1
             const truckRate = parseFloat(row.find('.truckRate').val()) || 0;
             const truckQty = parseFloat(row.find('.truckQty').val()) || 0;
-
+            console.log("truck row", row)
             const total = (truckRate * truckQty * uomTruck)
 
             // Update the Total input field
@@ -520,13 +524,13 @@
             const row = $(this).closest('tr');
             const firstColName = row.find('select, input').first().attr('name')
             console.log("input change", firstColName)
-            if (firstColName == "staff") {
+            if (firstColName == "staff[]") {
                 calculateLabourTotal(row);
             }
-            if (firstColName == "truckLabel") {
+            if (firstColName == "truckLabel[]") {
                 calculateTruckTotal(row)
             }
-            if (firstColName == "miscDescription") {
+            if (firstColName == "miscDescription[]") {
                 calculateMiscTotal(row)
             }
 
