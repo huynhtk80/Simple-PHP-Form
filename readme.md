@@ -24,8 +24,8 @@ As a demonstration of your skills, we ask that you complete the following code r
 
 ## How to run
 
-1. Clone the repository: `git clone https://github.com/[]`
-2. Create a new database as utilizing `mysql_db_init.sql` script
+1. Clone the repository: `git clone https://github.com/huynhtk80/Simple-PHP-Form.git`
+2. Create a new database as utilizing `DB_init_Script.sql` script or `e_ticket_export.sql`
 3. Utilizing the ".env.example" populate fields with your database information.
 4. Run the following command in the project directory:
 
@@ -33,4 +33,4 @@ As a demonstration of your skills, we ask that you complete the following code r
 php -S localhost:4000 -t public
 ```
 
-5. Open your browser and navigate to [http://localhost:9000](http://localhost:9000) to view the pages.
+5. Open your browser and navigate to [http://localhost:4000](http://localhost:4000) to view the pages.
