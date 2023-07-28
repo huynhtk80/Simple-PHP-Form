@@ -7,7 +7,6 @@
     <link href="./assets/favicon.ico" rel="icon">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="./assets/scripts.js"></script>
-    <!-- <script src="https://cdn.tiny.cloud/1/qoevcjkx2rtw4bgxm09619mnpdystv5fiaexxxybxx9hl2mn/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script> -->
     <script src="https://cdn.tiny.cloud/1/qoevcjkx2rtw4bgxm09619mnpdystv5fiaexxxybxx9hl2mn/tinymce/5/tinymce.min.js"
         referrerpolicy="origin"></script>
 </head>

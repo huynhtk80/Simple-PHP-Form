@@ -13,14 +13,13 @@
         throw new ErrorException("Permission Denied for writing on the ".($env_file_path).".");
     }
     echo(getenv('SHELL'));
-?>
 
- <?php
     $var_arrs = array();
-    // Open the .en file using the reading mode
+
+    // Open the .env file using the reading mode
     $fopen = fopen($env_file_path, 'r');
     if($fopen){
-        //Loop the lines of the file
+        
         while (($line = fgets($fopen)) !== false){
             // Check if line is a comment
             $line_is_comment = (substr(trim($line),0 , 1) == '#') ? true: false;
@@ -39,16 +38,10 @@
         // Close the file
         fclose($fopen);
     }
-    ?>
 
-    <?php
     foreach($var_arrs as $name => $value){
         //Using putenv()
         putenv("{$name}={$value}");
- 
-        //Or, using $_ENV
-        $_ENV[$name] = $value;
- 
-        // Or you can use both
+
     }
 ?>

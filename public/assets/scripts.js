@@ -1,4 +1,3 @@
-// jQuery function to load entries on page load
 $(document).ready(function () {
   // Add a new row to table
   $(document).on("click", ".addRow", function (event) {
@@ -38,11 +37,9 @@ $(document).ready(function () {
           // Clear existing options in the job dropdown
           targetPositionId.empty();
           targetPositionId.append('<option value="">Select job...</option>');
-          console.log("data: ", data);
 
-          // Populate the job dropdown options
+          // Populate the position dropdown options
           $.each(data, function (index, positions) {
-            console.log(positions);
             targetPositionId.append(
               '<option data-something="hi" value="' +
                 positions.position_id +
@@ -66,7 +63,7 @@ $(document).ready(function () {
     }
   });
 
-  //populates rates based on positions selection
+  //populates labour rates based on positions selection
   $(document).on("change", ".position", function () {
     var selectedPositionOption = $(this).find("option:selected");
     const regularRate = selectedPositionOption.data("regular-rate");
@@ -101,7 +98,6 @@ $(document).ready(function () {
           // Clear existing options in the job dropdown
           $("#jobName").empty();
           $("#jobName").append('<option value="">Select job...</option>');
-          console.log(data);
 
           // Populate the job dropdown options
           $.each(data, function (index, location) {
@@ -139,7 +135,7 @@ $(document).ready(function () {
           // Clear existing options in the job dropdown
           $("#location").empty();
           $("#location").append('<option value="">Select location...</option>');
-          console.log("datalocationg", data);
+
           // Populate the job dropdown options
           $.each(data, function (index, location) {
             $("#location").append(
@@ -168,13 +164,12 @@ $(document).ready(function () {
     const regularHours = parseFloat(row.find(".regularHours").val()) || 0;
     const overtimeRate = parseFloat(row.find(".overtimeRate").val()) || 0;
     const overtimeHours = parseFloat(row.find(".overtimeHours").val()) || 0;
-    console.log("labour row", row);
+
     const total =
       regularRate * regularHours * uomStaff +
       overtimeRate * overtimeHours * uomStaff;
 
-    // Update the Total input field
-    row.find(".total").val(total.toFixed(2)); // Assuming 2 decimal places
+    row.find(".total").val(total.toFixed(2));
   }
 
   // calculate the truck row total based on qty,rate and UOM
@@ -182,11 +177,10 @@ $(document).ready(function () {
     const uomTruck = parseInt(row.find(".uomTruck").val()) || 1;
     const truckRate = parseFloat(row.find(".truckRate").val()) || 0;
     const truckQty = parseFloat(row.find(".truckQty").val()) || 0;
-    console.log("truck row", row);
+
     const total = truckRate * truckQty * uomTruck;
 
-    // Update the Total input field
-    row.find(".totalTruck").val(total.toFixed(2)); // Assuming 2 decimal places
+    row.find(".totalTruck").val(total.toFixed(2));
   }
 
   // calculate the truck row total based on qty,rate and UOM
@@ -195,15 +189,14 @@ $(document).ready(function () {
     const miscQty = parseFloat(row.find(".miscQty").val()) || 0;
     const total = miscQty * miscPrice;
 
-    // Update the Total input field
-    row.find(".miscTotal").val(total.toFixed(2)); // Assuming 2 decimal places
+    row.find(".miscTotal").val(total.toFixed(2));
   }
 
   // on input change calculate new labour total
   $(document).on("change", "table tr input, table tr select", function () {
     const row = $(this).closest("tr");
     const firstColName = row.find("select, input").first().attr("name");
-    console.log("input change", firstColName);
+
     if (firstColName == "staff[]") {
       calculateLabourTotal(row);
     }
@@ -229,9 +222,9 @@ $(document).ready(function () {
       formTotal += parseFloat($(this).val()) || 0;
     });
 
-    // Update the Total input field
-    $(document).find(".formTotal").val(formTotal.toFixed(2)); // Assuming 2 decimal places
+    $(document).find(".formTotal").val(formTotal.toFixed(2));
   }
+
   //get sub totals
   $(document).on("change", "table input, table select", function () {
     const tableBody = $(this).closest("tbody");
@@ -240,7 +233,7 @@ $(document).ready(function () {
       subtotal += parseFloat($(this).find(".rowTotal").val());
     });
     const subtotalTargetId = $(this).closest("table").find(".sumSubTotal");
-    console.log("sub", subtotalTargetId);
+
     subtotalTargetId.val(subtotal.toFixed(2));
     calculateFormTotal();
   });
