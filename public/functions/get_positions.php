@@ -1,7 +1,7 @@
 <?php
 
 // Include the database connection file
-require_once("../private/mysql_connection.php");
+require_once("../../private/mysql_connection.php");
 
 // Get the selected staff ID from POST request
 $selectedStaffId = $_POST['staff_id'];

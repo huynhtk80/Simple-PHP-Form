@@ -1,6 +1,6 @@
 <?php
  //connect to db
- require_once("../private/mysql_connection.php");
+ require_once("../../private/mysql_connection.php");
 
  // Get the form data
  $customerId = $_POST['customerName'];
@@ -35,6 +35,7 @@ $miscQtyArr = $_POST['miscQty'];
 
 mysqli_begin_transaction($conn);
 
+//try catch not compatible with mysql 5.7
 try{
     // Insert data into the main ticket table
     $sql = "INSERT INTO ticket (customer_id, job_id, job_status, location_id, ordered_by, ticket_date, area, work_description) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
@@ -84,8 +85,11 @@ try{
         $stmt->bind_param("isddd", $ticketId, $miscDescription, $miscCost, $miscPrice, $miscQty);
         $stmt->execute();
 
-        mysqli_commit($conn);
+        if(!mysqli_commit($conn)){
+            echo mysqli_error($conn);
+        }else
         echo "All data saved successfully!";
+        
     }
 }catch(Exception $e){
     // Rollback the transaction if any insert fails
@@ -97,7 +101,7 @@ try{
     $conn->close();
 
     // Redirect to a success page or display a success message
-    header("Location: success_page.php");
+    // header("Location: success_page.php");
     exit();
 
 ?>

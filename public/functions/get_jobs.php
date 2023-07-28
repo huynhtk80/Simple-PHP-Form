@@ -1,20 +1,20 @@
 <?php
 
 // Include the database connection file
-require_once("../private/mysql_connection.php");
+require_once("../../private/mysql_connection.php");
 
 // Get the selected staff ID from AJAX POST request
-$selectedJobId = $_POST['job_id'];
+$selectedCustomerId = $_POST['customer_id'];
 
 // Query to fetch positions associated with the selected staff
-$sql = "SELECT location_id, location_name FROM location WHERE job_id = " . $selectedJobId;
+$sql = "SELECT job_id, job_name FROM job WHERE customer_id = " . $selectedCustomerId;
 $result = $conn->query($sql);
 
 // Prepare the data for JSON response
-$locations = array();
+$jobs = array();
 if ($result->num_rows > 0) {
 while ($row = $result->fetch_assoc()) {
-$locations[] = $row;
+$jobs[] = $row;
 }
 }
 
@@ -23,5 +23,5 @@ $conn->close();
 
 // Return positions as a JSON response
 header('Content-Type: application/json');
-echo json_encode($locations);
+echo json_encode($jobs);
 ?>

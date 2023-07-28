@@ -6,15 +6,16 @@
     <link href="./assets/index.css" rel="stylesheet">
     <link href="./assets/favicon.ico" rel="icon">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="./assets/scripts.js"></script>
     <!-- <script src="https://cdn.tiny.cloud/1/qoevcjkx2rtw4bgxm09619mnpdystv5fiaexxxybxx9hl2mn/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script> -->
     <script src="https://cdn.tiny.cloud/1/qoevcjkx2rtw4bgxm09619mnpdystv5fiaexxxybxx9hl2mn/tinymce/5/tinymce.min.js"
         referrerpolicy="origin"></script>
 </head>
 
-<body onload="document.ticketForm.reset();">
+<body onload="document.ticketForm.reset(); tinyMCE.activeEditor.setContent('');">
 
 
-    <?php include("../private/mysql_connection.php")?>
+
 
     <div class="header">
         <h1>Edit Ticket</h1>
@@ -23,7 +24,7 @@
     <div class="form-container">
 
 
-        <form action="save_entry.php" method="post" id="ticketForm" name="ticketForm">
+        <form action="./functions/save_entry.php" method="post" id="ticketForm" name="ticketForm">
             <div class="form-section-container">
                 <h2>Project</h2>
                 <div class="form-column-container">
@@ -32,18 +33,7 @@
                             <label for="customerName">Customer Name:</label>
                             <select type="text" name="customerName" id="customerName">
                                 <option value=""> Select Customer...</option>
-                                <?php
-                                    // Fetch customer names from the database
-                                    $sql = "SELECT customer_id, customer_name FROM customer"; // Replace 'customer_table' with the actual table name
-                                    $result = mysqli_query($conn, $sql);
-
-                                    if (mysqli_num_rows($result) > 0) {
-
-                                        while ($row = mysqli_fetch_assoc($result)) {
-                                            echo '<option  value="' . $row['customer_id'] . '">' . $row['customer_name'] . '</option>';
-                                        }
-                                    }
-                                ?>
+                                <?php include("./functions/get_customers.php")?>
                             </select>
 
                         </div>
@@ -69,7 +59,7 @@
                             <label for="location">Location/LSD:</label>
                             <select name="location" id="location">
                                 <option value=""> Select Job First...</option>
-                                <option value="2"> Select Job First...</option>
+
                             </select>
                         </div>
                     </div>
@@ -97,7 +87,7 @@
                 <h2>Description of Work</h2>
                 <label for="workDesc">Description:</label>
                 <textarea name="workDesc" id="workDesc">
-
+                                    Work description...
             </textarea>
                 <script>
                 tinymce.init({
@@ -144,18 +134,7 @@
                             <td>
                                 <select name="staff[]" class="staff">
                                     <option value="">Select Staff...</option>
-                                    <?php
-                                    // Fetch staff names from the database
-                                    $sql = "SELECT staff_id, staff_name FROM staff"; // Replace 'staff_table' with the actual table name
-                                    $result = mysqli_query($conn, $sql);
-
-                                    if (mysqli_num_rows($result) > 0) {
-
-                                        while ($row = mysqli_fetch_assoc($result)) {
-                                            echo '<option  value="' . $row['staff_id'] . '">' . $row['staff_name'] . '</option>';
-                                        }
-                                    }
-                                ?>
+                                    <?php include("./functions/get_staff.php")?>
                                 </select>
                             </td>
                             <td>
@@ -240,19 +219,7 @@
                             <td>
                                 <select type="text" name="truckLabel[]" class="truckLabel">
                                     <option value=""> Select truck...</option>
-                                    <?php
-                                    // Fetch equipment names from the database
-                                    $sql = "SELECT equipment_id, equipment_name, rental_rate FROM equipment"; 
-                                    $result = mysqli_query($conn, $sql);
-
-                                    if (mysqli_num_rows($result) > 0) {
-
-                                        while ($row = mysqli_fetch_assoc($result)) {
-                                            echo '<option  value="' . $row['equipment_id'] . '" data-rental-rate="'.$row['rental_rate'].'">' . $row['equipment_name'] . '</option>';
-                                        }
-                                    }
-                                ?>
-
+                                    <?php include("./functions/get_truck.php")?>
                                 </select>
                             </td>
                             <td><input type="number" class="truckQty" name="truckQty[]"></td>
@@ -353,250 +320,6 @@
     </div>
 
 
-    <script>
-    // jQuery function to handle form submission
-    // $('#ticketForm').submit(function(e) {
-    //     e.preventDefault();
-    //     var name = $('#name').val();
-    //     var email = $('#email').val();
-    //     $.post('save_entry.php', {
-    //         name: name,
-    //         email: email
-    //     }, function(data) {
-    //         if (data.success) {
-    //             $('#entriesList').append('<li>' + name + ' - ' + email + '</li>');
-    //             $('#name, #email').val('');
-    //         }
-    //     }, 'json');
-    // });
-
-    // jQuery function to load entries on page load
-    $(document).ready(function() {
-
-        // Add a new row to table
-        $(document).on('click', '.addRow', function(event) {
-            event.preventDefault();
-            var newRow = $(this).closest('table tbody').find("tr:last").clone();
-            $(this).closest('table tbody').append(newRow);
-            newRow.find('input').val("")
-            newRow.find('select').trigger('change')
-        });
-
-        // Remove a row from the table
-        $(document).on('click', '.removeRow', function(event) {
-            event.preventDefault();
-            var tableId = $(this).closest('table').attr('id');
-
-            if ($('#' + tableId + ' tbody tr').length > 1) {
-                if (confirm('Are you sure you want to remove this row?')) {
-                    $(this).closest('tr').remove();
-                }
-            } else {
-                alert("You cannot remove the last row.");
-            }
-
-        });
-
-        //populates positions based on staff selection
-        $(document).on('change', '.staff', function() {
-            var selectedStaffId = $(this).val();
-            const targetPositionId = $(this).closest("tr").find('.position')
-
-            if (!selectedStaffId == "") {
-                $.post('get_positions.php', {
-                    staff_id: selectedStaffId
-                }, function(data) {
-                    // Clear existing options in the job dropdown
-                    targetPositionId.empty();
-                    targetPositionId.append(
-                        '<option value="">Select job...</option>');
-                    console.log("data: ", data)
-
-                    // Populate the job dropdown options
-                    $.each(data, function(index, positions) {
-                        console.log(positions)
-                        targetPositionId.append(
-                            '<option data-something="hi" value="' + positions
-                            .position_id + '" data-regular-rate="' + positions
-                            .hourly_rate + '" data-overtime-rate="' +
-                            positions.overtime_rate + '">' + positions
-                            .position_name +
-                            '</option>');
-                    });
-                }, 'json');
-            } else {
-                targetPositionId.empty();
-                targetPositionId.append(
-                    '<option value="">Select staff first...</option>');
-            }
-
-        });
-
-        //populates rates based on positions selection
-        $(document).on('change', '.position', function() {
-            var selectedPositionOption = $(this).find('option:selected')
-            const regularRate = selectedPositionOption.data("regular-rate")
-            const overtimeRate = selectedPositionOption.data("overtime-rate")
-            const targetRegId = $(this).closest("tr").find('.regularRate')
-            const targetOverId = $(this).closest("tr").find('.overtimeRate')
-
-            targetRegId.val(parseFloat(regularRate).toFixed(2))
-            targetOverId.val(parseFloat(overtimeRate).toFixed(2))
-
-        });
-
-        //populates equipment rates based on truck selection
-        $(document).on('change', '.truckLabel', function() {
-            var selectedPositionOption = $(this).find('option:selected')
-            const regularRate = selectedPositionOption.data("rental-rate")
-            const targetRegId = $(this).closest("tr").find('.truckRate')
-            targetRegId.val(parseFloat(regularRate).toFixed(2))
-        });
-
-        // populate job option onchange of customer
-        $('#customerName').on('change', function() {
-            var selectedCustomerId = $(this).val();
-
-            // Get the job associated with the selected customer
-            if (!selectedCustomerId == "") {
-                $.post('get_jobs.php', {
-                    customer_id: selectedCustomerId
-                }, function(data) {
-                    // Clear existing options in the job dropdown
-                    $('#jobName').empty();
-                    $('#jobName').append('<option value="">Select job...</option>');
-                    console.log(data)
-
-                    // Populate the job dropdown options
-                    $.each(data, function(index, location) {
-                        $('#jobName').append('<option value="' + location
-                            .job_id + '">' + location.job_name + '</option>');
-                    });
-                }, 'json');
-            } else {
-                $('#jobName').empty();
-                $('#jobName').append('<option value="">Select customer first...</option>');
-            }
-
-        })
-
-        // populate location option onchange of job
-        $('#jobName').on('change', function() {
-            var selectedJobId = $(this).val();
-
-            // Get the job associated with the selected customer
-            if (!selectedJobId == "") {
-                $.post('get_locations.php', {
-                    job_id: selectedJobId
-                }, function(data) {
-                    // Clear existing options in the job dropdown
-                    $('#location').empty();
-                    $('#location').append('<option value="">Select location...</option>');
-                    console.log("datalocationg", data)
-                    // Populate the job dropdown options
-                    $.each(data, function(index, location) {
-                        $('#location').append('<option value="' + location
-                            .job_id + '">' + location.location_name + '</option>');
-                    });
-                }, 'json');
-            } else {
-                $('#jobName').empty();
-                $('#jobName').append('<option value="">Select customer first...</option>');
-            }
-
-        })
-
-
-
-        // calculate the total based on regular rate and hours, and overtime rate and hours
-        function calculateLabourTotal(row) {
-            const uomStaff = parseInt(row.find('.uomStaff').val()) || 1
-            const regularRate = parseFloat(row.find('.regularRate').val()) || 0;
-            const regularHours = parseFloat(row.find('.regularHours').val()) || 0;
-            const overtimeRate = parseFloat(row.find('.overtimeRate').val()) || 0;
-            const overtimeHours = parseFloat(row.find('.overtimeHours').val()) || 0;
-            console.log("labour row", row)
-            const total = (regularRate * regularHours * uomStaff) + (overtimeRate * overtimeHours * uomStaff);
-
-            // Update the Total input field
-            row.find('.total').val(total.toFixed(2)); // Assuming 2 decimal places
-        }
-
-        // calculate the truck row total based on qty,rate and UOM
-        function calculateTruckTotal(row) {
-            const uomTruck = parseInt(row.find('.uomTruck').val()) || 1
-            const truckRate = parseFloat(row.find('.truckRate').val()) || 0;
-            const truckQty = parseFloat(row.find('.truckQty').val()) || 0;
-            console.log("truck row", row)
-            const total = (truckRate * truckQty * uomTruck)
-
-            // Update the Total input field
-            row.find('.totalTruck').val(total.toFixed(2)); // Assuming 2 decimal places
-        }
-
-        // calculate the truck row total based on qty,rate and UOM
-        function calculateMiscTotal(row) {
-            const miscPrice = parseFloat(row.find('.miscPrice').val()) || 0;
-            const miscQty = parseFloat(row.find('.miscQty').val()) || 0;
-            const total = (miscQty * miscPrice);
-
-            // Update the Total input field
-            row.find('.miscTotal').val(total.toFixed(2)); // Assuming 2 decimal places
-        }
-
-        // on input change calculate new labour total
-        $(document).on('change', 'table tr input, table tr select', function() {
-            const row = $(this).closest('tr');
-            const firstColName = row.find('select, input').first().attr('name')
-            console.log("input change", firstColName)
-            if (firstColName == "staff[]") {
-                calculateLabourTotal(row);
-            }
-            if (firstColName == "truckLabel[]") {
-                calculateTruckTotal(row)
-            }
-            if (firstColName == "miscDescription[]") {
-                calculateMiscTotal(row)
-            }
-
-        });
-
-        //round all number input to 2 digits
-        $(document).on('change', 'input[type=number]', function() {
-            $(this).val(parseFloat($(this).val()).toFixed(2) || 0.00)
-        });
-
-        // calculate the truck row total based on qty,rate and UOM
-        function calculateFormTotal() {
-            const subtotalsIds = $(document).find('.sumSubTotal')
-            let formTotal = 0
-
-
-            subtotalsIds.each(function() {
-                formTotal += parseFloat($(this).val()) || 0
-
-            })
-
-
-            // Update the Total input field
-            $(document).find('.formTotal').val(formTotal.toFixed(2)); // Assuming 2 decimal places
-        }
-        //get sub totals
-        $(document).on('change', 'table input, table select', function() {
-            const tableBody = $(this).closest("tbody")
-            let subtotal = 0
-            tableBody.find("tr").each(function() {
-                subtotal += parseFloat($(this).find(".rowTotal").val())
-
-            })
-            const subtotalTargetId = $(this).closest('table').find('.sumSubTotal');
-            console.log("sub", subtotalTargetId)
-            subtotalTargetId.val(subtotal.toFixed(2))
-            calculateFormTotal();
-        });
-
-    });
-    </script>
 </body>
 
 </html>
