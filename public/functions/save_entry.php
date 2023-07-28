@@ -99,14 +99,16 @@ for ($i = 0; $i < count($miscDescriptionArr); $i++) {
 
 if(!mysqli_commit($conn)){
     printf("Errorcode: %d\n", $conn->errno);
-};
+}else{
+// Redirect to a success page or display a success message
+header("Location: success_page.php");
+}
 
 // Close the database connection
 $stmt->close();
 $conn->close();
 
-// Redirect to a success page or display a success message
-header("Location: success_page.php");
+
 exit();
 
 ?>

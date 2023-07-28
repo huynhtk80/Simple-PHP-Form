@@ -86,7 +86,7 @@ input {
   padding: 0 0.75rem;
 }
 
-input:disabled {
+input:read-only {
   background-color: lightgray;
 }
 
