@@ -25,7 +25,7 @@ $overtimeHoursArr = $_POST['overtimeHours'];
 $truckLabelArr = $_POST['truckLabel'];
 $truckQtyArr = $_POST['truckQty'];
 $uomTruckArr = $_POST['uomTruck'];
-$uomTruckArr = $_POST['truckRate'];
+$truckRate = $_POST['truckRate'];
 
 // Process miscellaneous data
 $miscDescriptionArr = $_POST['miscDescription'];
@@ -39,5 +39,34 @@ $stmt = $conn->prepare($sql);
 $stmt->bind_param("iisissss", $customerId, $jobId, $status, $locationId, $orderedBy, $ticketDate, $area, $workDesc);
 $stmt->execute();
 $ticketId = $stmt->insert_id; // Get the inserted ticket ID for later use
+
+// Insert labour data into the labour table
+for ($i = 0; $i < count($staffArr); $i++) {
+    $staff = $staffArr[$i];
+    $position = $positionArr[$i];
+    $uomStaff = $uomStaffArr[$i];
+    $regularRate = $regularRateArr[$i];
+    $regularHours = $regularHoursArr[$i];
+    $overtimeRate = $overtimeRateArr[$i];
+    $overtimeHours = $overtimeHoursArr[$i];
+
+    $sql = "INSERT INTO ticket_labour (ticket_id, staff_id, position_id, uom_staff, regular_rate, regular_hours, overtime_rate, overtime_hours) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("iiiidddd", $ticketId, $staff, $position, $uomStaff, $regularRate, $regularHours, $overtimeRate, $overtimeHours);
+    $stmt->execute();
+}
+
+// Insert truck data into the truck table
+for ($i = 0; $i < count($truckLabelArr); $i++) {
+    $truckLabel = $truckLabelArr[$i];
+    $truckQty = $truckQtyArr[$i];
+    $uomTruck = $uomTruckArr[$i];
+    $truckRate = $truckRate[$i];
+
+    $sql = "INSERT INTO ticket_equipment (ticket_id, equipment_id, rental_qty, uom_truck, rental_rate) VALUES (?, ?, ?, ?,?)";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("iiddd", $ticketId, $truckLabel, $truckQty, $uomTruck,$truckRate);
+    $stmt->execute();
+}
 
 ?>
