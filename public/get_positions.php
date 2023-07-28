@@ -3,10 +3,10 @@
 // Include the database connection file
 require_once("../private/mysql_connection.php");
 
-// Get the selected staff ID from AJAX POST request
+// Get the selected staff ID from POST request
 $selectedStaffId = $_POST['staff_id'];
 
-// Query to fetch positions associated with the selected staff
+// Query selected staff
 $sql = "SELECT position_id, position_name, hourly_rate, overtime_rate FROM position WHERE staff_id = " . $selectedStaffId;
 $result = $conn->query($sql);
 
