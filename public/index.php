@@ -85,7 +85,7 @@
                 <script>
                 tinymce.init({
                     selector: 'textarea',
-                    plugins: 'anchor autolink charmap codesample emoticons image link lists advlist media searchreplace table visualblocks wordcount checklist mediaembed casechange export formatpainter pageembed linkchecker a11ychecker tinymcespellchecker permanentpen powerpaste advtable advcode fullscreen preview textcolor print',
+                    plugins: 'anchor autolink charmap codesample emoticons image link lists advlist media searchreplace table visualblocks wordcount linkchecker fullscreen preview textcolor print',
                     toolbar: 'fullscreen | undo redo | formatselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | print preview media | forecolor backcolor',
                     elementpath: false
                 });
